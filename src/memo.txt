@@ -3,11 +3,8 @@ Docker作成
 
 TODO
 - 23:55時点データCRON Mac miniで行う
-- 更新日
 
 - FB, Twitterリンク
-<meta property="og:url" content="サイトのURL貼る">
-<meta name="twitter:site" content="サイトのURL貼る">
 
 
 https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000121431_00086.html

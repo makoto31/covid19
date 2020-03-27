@@ -9,7 +9,11 @@
         <meta property="og:title" content="新型コロナウィルス都道府県別の状況">
         <meta property="og:description" content="新型コロナウィルス 都道府県別 新規感染者数をグラフで確認できます">
         <meta property="og:type" content="website">
+        <meta property="og:url" content="https://makoto31.github.io/covid19/">
+        <meta property="og:image" content="https://makoto31.github.io/covid19/image.png">
         <meta name="twitter:card" content="summary">
+        <meta name="twitter:site" content="https://makoto31.github.io/covid19/">
+        <meta name="twitter:image" content="https://makoto31.github.io/covid19/image.png">
 
         <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
         <style>
@@ -64,6 +68,24 @@
                     margin-top: 0;
                 }
             }
+
+            .twitter{
+                color: white;
+                text-decoration: none;
+                background-color: rgba(42, 197, 246, 1);
+                padding: .25rem .5rem;
+                font-size: .75rem;
+                border-radius: 3px;
+            }
+            .facebook{
+                color: white;
+                text-decoration: none;
+                background-color: rgba(59, 89, 150, 1);
+                padding: .25rem .5rem;
+                font-size: .75rem;
+                border-radius: 3px;
+                margin-left: .25rem;
+            }
         </style>
     </head>
     <body style="margin: 0;">
@@ -75,7 +97,13 @@
             データは<a href="https://toyokeizai.net/sp/visual/tko/covid19/" target="_blank" rel="noopener noreferrer">東洋経済さん</a>と
             <a href="https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000121431_00086.html" target="_blank" rel="noopener noreferrer">厚生労働省</a>が公開されているデータを元に整理しました。
 
-            <time datetime="2020-03-27" itemprop="dateModified">2020年3月27日更新</time>
+            <div style="display:flex; justify-content: space-between;">
+                <time datetime="2020-03-27" itemprop="dateModified">2020年3月27日更新</time>
+                <div>
+                    <a class="twitter" target="_blank" rel="nofollow noopener" href="http://twitter.com/share?text=%E6%96%B0%E5%9E%8B%E3%82%B3%E3%83%AD%E3%83%8A%E3%82%A6%E3%82%A3%E3%83%AB%E3%82%B9%20%E9%83%BD%E9%81%93%E5%BA%9C%E7%9C%8C%E5%88%A5%20%E6%96%B0%E8%A6%8F%E6%84%9F%E6%9F%93%E8%80%85%E6%95%B0%E3%82%92%E3%82%B0%E3%83%A9%E3%83%95%E3%81%A7%E7%A2%BA%E8%AA%8D%E3%81%A7%E3%81%8D%E3%81%BE%E3%81%99&amp;url=https://makoto31.github.io/covid19/">Twitter</a>
+                    <a class="facebook" target="_blank" rel="nofollow noopener" href="http://www.facebook.com/sharer.php?u=https://makoto31.github.io/covid19/&amp;t=%E6%96%B0%E5%9E%8B%E3%82%B3%E3%83%AD%E3%83%8A%E3%82%A6%E3%82%A3%E3%83%AB%E3%82%B9%20%E9%83%BD%E9%81%93%E5%BA%9C%E7%9C%8C%E5%88%A5%20%E6%96%B0%E8%A6%8F%E6%84%9F%E6%9F%93%E8%80%85%E6%95%B0%E3%82%92%E3%82%B0%E3%83%A9%E3%83%95%E3%81%A7%E7%A2%BA%E8%AA%8D%E3%81%A7%E3%81%8D%E3%81%BE%E3%81%99">Facebook</a>
+                </div>
+            </div>
         </div>
 
         <script>
