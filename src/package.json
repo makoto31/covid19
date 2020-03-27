@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "csv": "ts-node csv_parse/main.ts"
+    "csv": "ts-node csv_parse/main.ts",
+    "diff": "ts-node diff/main.ts"
   },
   "author": "",
   "license": "ISC",
