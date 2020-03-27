@@ -1,4 +1,14 @@
-{
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>新型コロナウィルス都道府県別の状況</title>
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+    </head>
+    <body>
+
+        <script>
+            const data = {
 	"2020/1/15": {
 		"神奈川県": 1
 	},
@@ -448,4 +458,96 @@
 		"長野県": 1,
 		"兵庫県": 3
 	}
-}
+};
+        </script>
+        <script>
+            const total = {
+                count: {},
+                rank: [],
+            };
+            const prefectures = {};
+            for(const key in data){
+                for(const prefecture in data[key]){
+                    if(!total.count[prefecture]){
+                        total.count[prefecture] = 0;
+                    }
+                    total.count[prefecture] += data[key][prefecture];
+
+                    if(!prefectures[prefecture]){
+                        prefectures[prefecture] = {};
+                    }
+                    prefectures[prefecture][key] = data[key][prefecture];
+                }
+            }
+            for(const key in total.count){
+                total.rank.push({
+                    prefecture: key,
+                    count: total.count[key]
+                });
+            }
+            total.rank.sort((a, b)=>{
+                return b.count - a.count;
+            });
+        </script>
+        <script>
+            total.rank.forEach((item)=>{
+                const element = document.createElement('div');
+                document.body.appendChild(element);
+
+                const title = document.createElement('h2');
+                title.innerHTML = item.prefecture;
+                element.appendChild(title);
+
+                const canvas = document.createElement('canvas');
+                element.appendChild(canvas);
+
+                const data = prefectures[item.prefecture];
+                const labels = [];
+                const datasets = [];
+                for(const key in data){
+                    labels.push(key.slice(5));
+                    datasets.push(data[key]);
+                }
+                if(labels.length > 7){
+                    const rate = Math.round(labels.length / 7);
+                    for(let i = 0; i < labels.length; i++){
+                        if(i == 0){
+                            continue;
+                        }
+                        if((labels.length - 1) == i){
+                            continue;
+                        }
+                        if((i % rate) == 0){
+                            continue;
+                        }
+                        labels[i] = '';
+                    }
+                }
+
+                new Chart(canvas, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            data: datasets,
+                            borderColor: 'rgba(255, 99, 132, 1)',
+                            backgroundColor: 'rgba(255, 99, 132, 0.3)',
+                        }],
+                    },
+                    options: {
+                        legend: {
+                            display: false,
+                        },
+                        scales: {
+                            xAxes: [{
+                                gridLines: {
+                                    display: false
+                                }
+                            }]
+                        }
+                    },
+                });
+            });
+        </script>
+    </body>
+</html>
