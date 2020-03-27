@@ -1,0 +1,12 @@
+Docker作成
+> docker run --name covid19 -itd -v ${PWD}:/www node:12
+
+TODO
+- csvパース
+- 23:55時点データCRON Mac miniで行う
+- scss作成
+- index.htmlテンプレート作成
+- TOP10 あとは選ぶ 一番下に県別トータル
+- FB, Twitterリンク
+- OGP
+- 東洋経済リンク
