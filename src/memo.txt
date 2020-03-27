@@ -8,5 +8,5 @@ TODO
 - 更新日
 
 - FB, Twitterリンク
-- OGP
-- 東洋経済リンク
+<meta property="og:url" content="サイトのURL貼る">
+<meta name="twitter:site" content="サイトのURL貼る">
