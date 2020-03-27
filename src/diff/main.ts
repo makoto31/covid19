@@ -12,7 +12,7 @@ type Prefecture = {
     value: number;
 }
 
-async function main(){
+async function count(){
     const before:{prefectures: Prefecture[]} = JSON.parse(await fs.readFile(join(__dirname, '../data', beforeFile), 'utf8'));
     const after:{prefectures: Prefecture[]} = JSON.parse(await fs.readFile(join(__dirname, '../data', afterFile), 'utf8'));
 
@@ -36,6 +36,16 @@ async function main(){
     await fs.writeFile(join(__dirname, 'diff.json'), JSON.stringify(data, null, '\t'));
 }
 
+async function write(){
+    await fs.copyFile(join(__dirname, '../pages/index.html'), join(__dirname, '../../index.html'));
+
+    const html = await fs.readFile(join(__dirname, '../../index.html'), 'utf8');
+    const data = await fs.readFile(join(__dirname, 'diff.json'), 'utf8');
+
+    await fs.writeFile(join(__dirname,  '../../index.html'), html.replace('__template__', data));
+}
+
 (async()=>{
-    await main();
+    await count();
+    await write();
 })();
