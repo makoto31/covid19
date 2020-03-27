@@ -2,9 +2,7 @@ Docker作成
 > docker run --name covid19 -itd -v ${PWD}:/www node:12
 
 TODO
-- 現時点データ抽出
 - 23:55時点データCRON Mac miniで行う
-- index.htmlテンプレート作成
 - 更新日
 
 - FB, Twitterリンク

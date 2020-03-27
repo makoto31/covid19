@@ -70,7 +70,15 @@ async function write(){
     const html = await fs.readFile(join(__dirname, '../../index.html'), 'utf8');
     const data = await fs.readFile(join(__dirname, 'diff.json'), 'utf8');
 
-    await fs.writeFile(join(__dirname,  '../../index.html'), html.replace('__template__', data));
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = now.getMonth() + 1;
+    const date = now.getDate();
+
+    const datetime = `${year}-${String(month).padStart(2, '0')}-${String(date).padStart(2, '0')}`;
+    const update = `${year}年${month}月${date}日`;
+
+    await fs.writeFile(join(__dirname,  '../../index.html'), html.replace('__template__', data).replace('__update__', update).replace('__datetime__', datetime));
 }
 
 async function total(){
@@ -90,7 +98,7 @@ async function total(){
 }
 
 (async()=>{
-    await count();
+    // await count();
     // await total();
     await write();
 })();
