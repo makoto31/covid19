@@ -46,6 +46,6 @@ async function write(){
 }
 
 (async()=>{
-    await count();
+    // await count();
     await write();
 })();
