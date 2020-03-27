@@ -1,35 +1,63 @@
 import { promises as fs } from 'fs';
 import { join } from 'path';
+import axios from 'axios';
+import cheerio from 'cheerio';
 
-const beforeFile = 'data_3_26.json';
-const afterFile = 'data_3_27.json';
+const beforeFile = 'https://www.mhlw.go.jp/stf/newpage_10465.html';
+const afterFile = 'https://www.mhlw.go.jp/stf/newpage_10521.html';
 const afterDate = '2020/3/27';
 
-type Prefecture = {
-    code: number;
-    ja: string;
-    en: string;
-    value: number;
-}
-
 async function count(){
-    const before:{prefectures: Prefecture[]} = JSON.parse(await fs.readFile(join(__dirname, '../data', beforeFile), 'utf8'));
-    const after:{prefectures: Prefecture[]} = JSON.parse(await fs.readFile(join(__dirname, '../data', afterFile), 'utf8'));
+
+    const parse = async(url:string)=>{
+        const response = await axios.get(url);
+        const $ = cheerio.load(response.data);
+        const tables = $('table');
+        let index = -1;
+        tables.each((i, el)=>{
+            if(!$(el).find('td').eq(0).text().startsWith('都道府県')){
+                return;
+            }
+            index = i;
+        });
+        if(index == -1){
+            return;
+        }
+
+        const ret:{[key:string]:number} = {};
+        const table = tables.eq(index);
+        table.find('tr').each((i, el)=>{
+            if(i == 0){
+                return;
+            }
+            const items = $(el).find('td');
+            const prefecture = items.eq(0).text();
+            const count = Number(items.eq(1).text());
+            ret[prefecture] = count;
+        });
+    
+        return ret;
+    }
+    const before = await parse(beforeFile);
+    if(!before){
+        return;
+    }
+    const after = await parse(afterFile);
+    if(!after){
+        return;
+    }
 
     const diff:{[key:string]:number} = {};
-    after.prefectures.forEach((item)=>{
-        const b = before.prefectures.find((b)=>{
-            return b.code == item.code;
-        });
-        if(!b){
-            return;
+    for(const key in after){
+        if(!before[key]){
+            continue;
         }
-        const value = item.value - b.value;
+        const value = after[key] - before[key];
         if(value == 0){
-            return;
+            continue;
         }
-        diff[item.ja] = value;
-    });
+        diff[key] = value;
+    }
 
     const data:{[key:string]:{[key:string]:number}} = JSON.parse(await fs.readFile(join(__dirname, 'diff.json'), 'utf8'));
     data[afterDate] = diff;
@@ -46,6 +74,6 @@ async function write(){
 }
 
 (async()=>{
-    // await count();
+    await count();
     await write();
 })();
