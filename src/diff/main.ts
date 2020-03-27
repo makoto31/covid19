@@ -73,7 +73,24 @@ async function write(){
     await fs.writeFile(join(__dirname,  '../../index.html'), html.replace('__template__', data));
 }
 
+async function total(){
+
+    const data:{[key:string]:{[key:string]:number}} = JSON.parse(await fs.readFile(join(__dirname, 'diff.json'), 'utf8'));
+    for(const key in data){
+        if(data[key]['総計'] != null){
+            continue;
+        }
+        let total = 0;
+        for(const prefecture in data[key]){
+            total += data[key][prefecture];
+        }
+        data[key]['総計'] = total;
+    }
+    await fs.writeFile(join(__dirname, 'diff.json'), JSON.stringify(data, null, '\t'));
+}
+
 (async()=>{
     await count();
+    // await total();
     await write();
 })();
