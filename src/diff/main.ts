@@ -1,9 +1,9 @@
 import { promises as fs } from 'fs';
 import { join } from 'path';
 
-const beforeFile = 'data_3_24.json';
-const afterFile = 'data_3_25.json';
-const afterDate = '2020/3/25';
+const beforeFile = 'data_3_26.json';
+const afterFile = 'data_3_27.json';
+const afterDate = '2020/3/27';
 
 type Prefecture = {
     code: number;
@@ -16,8 +16,6 @@ async function main(){
     const before:{prefectures: Prefecture[]} = JSON.parse(await fs.readFile(join(__dirname, '../data', beforeFile), 'utf8'));
     const after:{prefectures: Prefecture[]} = JSON.parse(await fs.readFile(join(__dirname, '../data', afterFile), 'utf8'));
 
-    console.log(before.prefectures);
-    console.log(after.prefectures);
     const diff:{[key:string]:number} = {};
     after.prefectures.forEach((item)=>{
         const b = before.prefectures.find((b)=>{
