@@ -3,11 +3,12 @@ import { join } from 'path';
 import axios from 'axios';
 import cheerio from 'cheerio';
 
-const beforeFile = 'https://www.mhlw.go.jp/stf/newpage_10465.html';
-const afterFile = 'https://www.mhlw.go.jp/stf/newpage_10521.html';
-const afterDate = '2020/3/27';
+// 厚生労働省からのスクレイピング
+async function count_web(){
 
-async function count(){
+    const beforeFile = 'https://www.mhlw.go.jp/stf/newpage_10465.html';
+    const afterFile = 'https://www.mhlw.go.jp/stf/newpage_10521.html';
+    const afterDate = '2020/3/27';
 
     const parse = async(url:string)=>{
         const response = await axios.get(url);
@@ -64,21 +65,47 @@ async function count(){
     await fs.writeFile(join(__dirname, 'diff.json'), JSON.stringify(data, null, '\t'));
 }
 
-async function write(){
-    await fs.copyFile(join(__dirname, '../pages/index.html'), join(__dirname, '../../index.html'));
+// 東洋経済さんからのカウント
+async function count_local(){
 
-    const html = await fs.readFile(join(__dirname, '../../index.html'), 'utf8');
-    const data = await fs.readFile(join(__dirname, 'diff.json'), 'utf8');
+    const beforeFile = 'data-3-31.json';
+    const afterFile = 'data-4-1.json';
+    const afterDate = '2020/4/1';
 
-    const now = new Date();
-    const year = now.getFullYear();
-    const month = now.getMonth() + 1;
-    const date = now.getDate();
+    const parse = async(file:string)=>{
+        const data:{prefectures:{ja:string; value:number}[]} = JSON.parse(await fs.readFile(join(__dirname, file), 'utf8'));
 
-    const datetime = `${year}-${String(month).padStart(2, '0')}-${String(date).padStart(2, '0')}`;
-    const update = `${year}年${month}月${date}日`;
+        const ret:{[key:string]:number} = {};
+        data.prefectures.forEach((prefecture)=>{
+            ret[prefecture.ja] = prefecture.value;
+        });
+    
+        return ret;
+    }
+    const before = await parse(beforeFile);
+    if(!before){
+        return;
+    }
+    const after = await parse(afterFile);
+    if(!after){
+        return;
+    }
 
-    await fs.writeFile(join(__dirname,  '../../index.html'), html.replace('__template__', data).replace('__update__', update).replace('__datetime__', datetime));
+    const diff:{[key:string]:number} = {};
+    for(const key in after){
+        if(!before[key]){
+            continue;
+        }
+        const value = after[key] - before[key];
+        if(value == 0){
+            continue;
+        }
+        diff[key] = value;
+    }
+
+    const data:{[key:string]:{[key:string]:number}} = JSON.parse(await fs.readFile(join(__dirname, 'diff.json'), 'utf8'));
+    data[afterDate] = diff;
+    await fs.writeFile(join(__dirname, 'diff.json'), JSON.stringify(data, null, '\t'));
 }
 
 async function total(){
@@ -97,8 +124,26 @@ async function total(){
     await fs.writeFile(join(__dirname, 'diff.json'), JSON.stringify(data, null, '\t'));
 }
 
+async function write(){
+    await fs.copyFile(join(__dirname, '../pages/index.html'), join(__dirname, '../../index.html'));
+
+    const html = await fs.readFile(join(__dirname, '../../index.html'), 'utf8');
+    const data = await fs.readFile(join(__dirname, 'diff.json'), 'utf8');
+
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = now.getMonth() + 1;
+    const date = now.getDate();
+
+    const datetime = `${year}-${String(month).padStart(2, '0')}-${String(date).padStart(2, '0')}`;
+    const update = `${year}年${month}月${date}日`;
+
+    await fs.writeFile(join(__dirname,  '../../index.html'), html.replace('__template__', data).replace('__update__', update).replace('__datetime__', datetime));
+}
+
 (async()=>{
+    // await count_local();
     // await count();
-    // await total();
+    await total();
     await write();
 })();

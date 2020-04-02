@@ -2,9 +2,17 @@ Docker作成
 > docker run --name covid19 -itd -v ${PWD}:/www node:12
 
 TODO
-- 23:55時点データCRON Mac miniで行う
+- 退院者、死亡者も出すFixedでスイッチ用意する
+- Google Analyticsを置く
 
-- FB, Twitterリンク
-
+- PM 1〜6時にCRONする
+- 厚生労働省のページのdiffみる
+  => 通知させて、別途以下実行にする？
+- スクレイピングする
+- Firestoreにいれる
+- Github APIでpushする
 
 https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000121431_00086.html
+
+数字に※がついてる場合がある
+https://www.mhlw.go.jp/stf/newpage_10187.html
